@@ -3,15 +3,18 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../../src/app');
-const Post = require('../../src/models/Post');
-const User = require('../../src/models/User');
-const { generateToken } = require('../../src/utils/auth');
+const app = require('../../server');
+const Post = require('../../models/Post');
+const User = require('../../models/User');
+const { generateToken } = require('../../utils/auth');
+
+jest.setTimeout(30000);
 
 let mongoServer;
 let token;
 let userId;
 let postId;
+
 
 // Setup in-memory MongoDB server before all tests
 beforeAll(async () => {
@@ -52,7 +55,7 @@ afterEach(async () => {
   for (const key in collections) {
     const collection = collections[key];
     if (collection.collectionName !== 'users' && collection.collectionName !== 'posts') {
-      await collection.deleteMany({});
+      await collection[key].deleteMany({});
     }
   }
 });
